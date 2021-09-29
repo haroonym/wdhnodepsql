@@ -5,3 +5,24 @@ DELETE http://127.0.0.1:3000/cars/2
 DELETE http://127.0.0.1:3000/carsssss/1
 ###
 DELETE http://127.0.0.1:3000/cars/22
+###
+PATCH http://127.0.0.1:3000/cars/3
+Content-Type: application/json
+
+{
+    "title": "Haroon Younas"
+}
+###
+POST http://127.0.0.1:3000/cars/
+Content-Type: application/json
+
+{
+    "title": "Rare Oldtimer",
+    "image": "http://localhost:3000/images/car10.png",
+    "status": "available",
+    "price": "52300",
+    "miles": 189921,
+    "year_of_make": 1978,
+    "description": "Excellent condition. A trip back in time!",
+    "owner": 10
+}

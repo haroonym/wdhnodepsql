@@ -1,5 +1,5 @@
 const asyncHandler = require('express-async-handler');
-const { getCarsRoutes, delCarsRoutes } = require('../model/cars');
+const { getCarsRoutes, delCarsRoutes, patchCarsRoutes, insertCarRoutes } = require('../model/cars');
 
 // const carModel = require('../model/cars');
 
@@ -13,4 +13,14 @@ const deleteCar = asyncHandler(async (req, res) => {
   res.status(result.code).json(result);
 });
 
-module.exports = { getCars, deleteCar };
+const changeStatusCar = asyncHandler(async (req, res) => {
+  const result = await patchCarsRoutes(req.params.id, req.body);
+  res.status(result.code).json(result);
+});
+
+const addCar = asyncHandler(async (req, res) => {
+  const result = await insertCarRoutes(req.body);
+  res.status(result.code).json(result);
+});
+
+module.exports = { getCars, deleteCar, changeStatusCar, addCar };
