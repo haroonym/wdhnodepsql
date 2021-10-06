@@ -22,18 +22,19 @@ async function delCarsRoutes(id) {
 }
 
 async function patchCarsRoutes(id, data) {
-  const { result } = await db.query('SELECT * FROM cars WHERE id = $1', [id]);
-  if (result.code != 200) return { code: 404, data: `id ${id} was not found in the database` };
+  const { rows } = await db.query('SELECT * FROM cars WHERE id = $1', [id]);
+  // console.log(rows);
+  if (rows.length <= 0) return { code: 404, data: `id ${id} was not found in the database` };
 
   const props = [];
   for (const prop in data) {
-    props.push(`${prop} = '${data[prop]}'`);
+    props.push(`${prop}='${data[prop]}'`);
   }
   const cmd = `UPDATE cars SET ${props.join(',')} WHERE id = $1`;
   await db.query(cmd, [id]);
   return {
     code: 200,
-    data: true,
+    data: `Car with id ${id} was updated successfully`,
   };
 }
 
