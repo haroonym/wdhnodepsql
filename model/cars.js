@@ -2,7 +2,7 @@
 /* eslint-disable guard-for-in */
 const db = require('../db');
 
-async function getCarsRoutes() {
+async function getCars() {
   const { rows } = await db.query('SELECT * FROM cars');
   return {
     code: 200,
@@ -10,7 +10,7 @@ async function getCarsRoutes() {
   };
 }
 
-async function delCarsRoutes(id) {
+async function deleteCar(id) {
   const { rows } = await db.query('DELETE FROM cars WHERE id = $1', [id]);
   if (rows.length < 0) {
     return { code: 404, data: `id ${id} was not found in the database` };
@@ -21,7 +21,7 @@ async function delCarsRoutes(id) {
   };
 }
 
-async function patchCarsRoutes(id, data) {
+async function changeStatusCar(id, data) {
   const { rows } = await db.query('SELECT * FROM cars WHERE id = $1', [id]);
   // console.log(rows);
   if (rows.length <= 0) return { code: 404, data: `id ${id} was not found in the database` };
@@ -46,7 +46,7 @@ async function getIdFromOwner(owner) {
   return rows[0].id;
 }
 
-async function insertCarRoutes(c) {
+async function addCar(c) {
   const { rows } = await db.query('SELECT MAX(id) AS max FROM cars');
   const id = rows[0].max + 1;
   const idOwn = await getIdFromOwner(c.owner);
@@ -62,9 +62,51 @@ async function insertCarRoutes(c) {
   };
 }
 
+async function getCarByID(query) {
+  const { id } = query;
+  if (id) {
+    const { rows } = await db.query(
+      'SELECT title, image, status, price, miles, year_of_make, description, first_name,last_name FROM cars c JOIN owner o on o.id = c.owner WHERE c.id = $1;',
+      [id],
+    );
+    if (rows.length > 0) {
+      return {
+        code: 200,
+        data: rows,
+      };
+    }
+  }
+  return {
+    code: 404,
+    data: 'Not found in the Database',
+  };
+}
+
+async function getCarByOwner(query) {
+  const { firstName, lastName } = query;
+  if (firstName && lastName) {
+    const { rows } = await db.query(
+      'SELECT title, image, status, price, miles, year_of_make, description FROM cars c JOIN owner o on o.id = c.owner WHERE o.first_name = $1 AND o.last_name = $2;',
+      [firstName, lastName],
+    );
+    if (rows.length > 0) {
+      return {
+        code: 200,
+        data: rows,
+      };
+    }
+  }
+  return {
+    code: 404,
+    data: 'Not found in the Database',
+  };
+}
+
 module.exports = {
-  getCarsRoutes,
-  delCarsRoutes,
-  patchCarsRoutes,
-  insertCarRoutes,
+  getCars,
+  deleteCar,
+  changeStatusCar,
+  addCar,
+  getCarByID,
+  getCarByOwner,
 };

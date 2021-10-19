@@ -1,6 +1,6 @@
 GET http://127.0.0.1:3000/cars
 ###
-DELETE http://127.0.0.1:3000/cars/10
+DELETE http://127.0.0.1:3000/cars/1
 ###
 DELETE http://127.0.0.1:3000/carsssss/1
 ###
@@ -29,3 +29,7 @@ Content-Type: application/json
     },
     "description": "Excellent condition. A trip back in time!"
 }
+###
+GET http://127.0.0.1:3000/cars?id=3
+###
+GET http://127.0.0.1:3000/cars?firstName=Max&&lastName=Blam
